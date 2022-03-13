@@ -1,0 +1,44 @@
+PARSER_BEGIN(Hello)
+package egtry.hello;
+
+import java.io.StringReader;
+
+public class Hello {
+  
+    public static void main(String[] args) throws Exception {
+      StringReader in=new StringReader("count 10");
+      Hello hello=new Hello(in);
+      Hello.words();
+    }
+    
+}
+
+PARSER_END(Hello)
+
+
+SKIP: { " " |"\t" |"\n" |"\r" }
+
+TOKEN: { <WORD: (["a"-"z"])+ > }
+TOKEN: { <INT: (["0"-"9"])* >  }
+
+void words():
+{
+  int id=0;
+}
+{
+  <WORD> 
+      { id++; 
+        System.out.println(id+" word"); 
+      }
+  <WORD> 
+      { id++; 
+        System.out.println(id+" word2"); 
+      }
+  <INT>
+     {
+       id++;
+       System.out.println(id+"id");
+     }
+   <EOF>
+}
+

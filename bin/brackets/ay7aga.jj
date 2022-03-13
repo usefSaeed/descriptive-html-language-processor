@@ -1,0 +1,47 @@
+PARSER_BEGIN(Example3)
+package brackets;
+/**
+ * Simple brace matcher.
+ */
+public class Example3 {
+
+  /** Main entry point. */
+  public static void main(String args[]) throws ParseException {
+    Example3 parser = new Example3(System.in);
+    parser.Input();
+  }
+
+}
+
+PARSER_END(Example3)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| <(["a"-"z"]) >
+}
+
+TOKEN :
+{
+  <LBRACE: "{">
+| <RBRACE: "}">
+}
+
+/** Root production. */
+void Input() :
+{ int count; }
+{
+  count=MatchedBraces() <EOF>
+  { System.out.println("The levels of nesting is " + count); }
+}
+
+/** Brace counting production. */
+int MatchedBraces() :
+{ int nested_count=0; }
+{
+  <LBRACE> [ nested_count=MatchedBraces() ] <RBRACE>
+  { return ++nested_count; }
+}
