@@ -1,0 +1,78 @@
+PARSER_BEGIN(Parser)
+package Test;
+
+public class Parser {
+  public static void main(String[] args) throws ParseException {
+    Parser parser = new Parser(System.in);
+    parser.start();
+  }
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+    <quote: "\""|"\'">
+|
+    <quoted_text : <quote> (<alphanum>)* <quote> >
+|
+    <alphanum: ["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." >
+}
+
+
+void start() : {}
+{
+    create()
+    <EOF>
+}
+
+void create() : {}
+{
+    "ADD"
+    element()
+}
+
+void element() : {}
+{
+    img()
+    |
+        "PARAGRAPH" decorated_text()
+    |
+        "HEADING" decorated_text()
+    |
+        "LINK" decorated_url()
+}
+
+void img() : {}
+{
+    "IMAGE"
+    "WITH"
+    "SOURCE"
+    <quoted_text>
+}
+
+void decorated_text() : {}
+{
+    "WITH"
+    ( "COLOR" | "FONT"  | "TEXT" )
+    <quoted_text>
+    // [..] means that what is inside it is optional, in this context equivalent to (..)?
+    [ "AND" decorated_text() ]
+}
+
+void decorated_url() : {}
+{
+    "WITH LINK"
+    <quoted_text>
+    |
+    [ decorated_text() ]
+}
+
