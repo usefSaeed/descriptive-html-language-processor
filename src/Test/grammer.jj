@@ -14,10 +14,9 @@ SKIP :
 {
   " "
 | "\t"
-| "\n"
-| "\r"
 }
 
+TOKEN : { <EOL: "\n" | "\r"> }
 TOKEN :
 {
     <quote: "\""|"\'">
@@ -31,7 +30,7 @@ TOKEN :
 void start() : {}
 {
     create()
-    <EOF>
+    <EOL>
 }
 
 void create() : {}
