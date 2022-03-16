@@ -11,11 +11,29 @@ public interface HTMLConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int quote = 5;
+  int create = 2;
   /** RegularExpression Id. */
-  int sentence = 6;
+  int elem = 3;
   /** RegularExpression Id. */
-  int alphanum = 7;
+  int img = 4;
+  /** RegularExpression Id. */
+  int head = 5;
+  /** RegularExpression Id. */
+  int para = 6;
+  /** RegularExpression Id. */
+  int url = 7;
+  /** RegularExpression Id. */
+  int quote = 8;
+  /** RegularExpression Id. */
+  int phrase = 9;
+  /** RegularExpression Id. */
+  int text = 10;
+  /** RegularExpression Id. */
+  int color = 11;
+  /** RegularExpression Id. */
+  int font = 12;
+  /** RegularExpression Id. */
+  int SPACE = 13;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -23,16 +41,19 @@ public interface HTMLConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\" \"",
-    "\"\\t\"",
     "\"\\n\"",
-    "\"\\r\"",
-    "<quote>",
-    "<sentence>",
-    "<alphanum>",
-    "\"ADD\"",
-    "\"IMAGE WITH SOURCE\"",
+    "<create>",
+    "<elem>",
+    "<img>",
     "\"HEADING\"",
+    "\"PARAGRAPH\"",
+    "\"LINK\"",
+    "<quote>",
+    "<phrase>",
+    "<text>",
+    "<color>",
+    "<font>",
+    "<SPACE>",
   };
 
 }

@@ -15,69 +15,66 @@ public class HTML {
 
 PARSER_END(HTML)
 
+SKIP : {
+  "\n"
+}
 
-SKIP :
+
+TOKEN :
 {
-  " "
-| "\t"
-| "\n"
-| "\r"
-}
+       <create: "ADD" <SPACE> <elem>> 
+   |   <elem: <img> | <head> | <para> | <url>>
 
-TOKEN : {
-      <quote: "\""|"\'">
-    | <sentence : <quote> (<alphanum>)* <quote> >
-    | <alphanum: ["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." >
-}
+   |   <img: "IMAGE" <SPACE> "WITH" <SPACE> "SOURCE" <SPACE> <phrase>>
+   |   <head: "HEADING" /* <decorated_text>*/>
+   |   <para: "PARAGRAPH"/* <decorated_text>*/>
+   |   <url: "LINK"/* <decorated_url>*/>
 
-
-
-
-
-//TOKEN :
-//{
-//       <create: "ADD">
-//   |   <elem: img | head | para | url>
-//
-//   |   <img: "IMAGE" "WITH" "SOURCE" <phrase>>
-//   |   <head: "HEADING" <decorated_text>>
-//   |   <para: "PARAGRAPH" <decorated_text>>
-//   |   <url: "LINK" <decorated_url>>
-//
-//   |   <quote: "\""|"\'">
-//   |   <phrase:  <phrase> <alphanum> | "">
+   |   <quote: "\""|"\'">
+   |   <phrase: <quote> (["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." | " " | "-")* <quote>>
 //   |   <decorated_text: <decorated_text> "AND" <decorated_text> | <text> | <color> | <font>>
 //   |   <decorated_url: <decorated_url> "AND" <link> | <decorated_text> | <text> | <color> | <font> | <link>>
-//
-//   |   <alphanum: ["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." >
-//   |   <text: "WITH" "TEXT" <quote> <phrase> <quote>>
-//   |   <color: "WITH" "COLOR" <quote> <phrase> <quote>>
-//   |   <font: "WITH" "FONT" <quote> <phrase> <quote>>
-//       <link: "WITH" "LINK" < quote > <phrase > <quote >>
-//
-//}
+
+   |   <text: "WITH" <SPACE> "TEXT" <SPACE> <phrase>>
+   |   <color: "WITH" <SPACE> "COLOR" <SPACE> <phrase>>
+   |   <font: "WITH" <SPACE> "FONT" <SPACE> <phrase> >
+//       <link: "WITH" "LINK"  <phrase >>
+
+}
+
+SPECIAL_TOKEN :
+{
+  <SPACE: (" " |"\t" | "\r" )*>
+  
+}
+
 
 /** Root production. */
 void Input():
-{String str= "";}
+{}
 {
-    "ADD" [str = element()] {System.out.println(str); }
+  
+  	(<create>)*  	
+    
 }
-
-String element() : {
-  	
-  } {
-    "IMAGE WITH SOURCE" {
-        return "<img src=";
-    }
-    | "HEADING" {
-        return head();
-    }
-}
-String head():
- {String s="<h1"} {
-	""
-
-   }
+//{
+//    "ADD" [str = element()] {System.out.println(str); }
+//}
+//
+//String element() : {
+//
+//  } {
+//    "IMAGE WITH SOURCE" {
+//        return "<img src=";
+//    }
+//    | "HEADING" {
+//        return head();
+//    }
+//}
+//String head():
+// {String s="<h1"} {
+//	""
+//
+//   }
   
 
