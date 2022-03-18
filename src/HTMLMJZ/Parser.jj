@@ -1,0 +1,110 @@
+PARSER_BEGIN(Parser)
+package HTMLMJZ;
+
+public class Parser {
+  public static void main(String[] args) throws ParseException {
+    Parser parser = new Parser(System.in);
+    parser.start();
+  }
+}
+
+PARSER_END(Parser)
+
+
+SKIP :
+{
+  " "
+| "\t"
+}
+
+
+TOKEN : { <EOL: "\n" | "\r"> }
+TOKEN :
+{
+    <quote: "\"">  
+|
+
+    <quoted_text : <quote> (<alphanum>)* <quote> > 
+|
+    <alphanum: ["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." | " " >
+}
+
+
+void start() : {}
+{
+	create()<EOL>
+
+}
+
+
+void create() : {}
+{
+    "ADD"
+    element()
+}
+
+
+void element() : {}
+{
+      img()
+    |
+      "PARAGRAPH" decorated_text()
+    |
+      "HEADING" decorated_text()
+    |
+      "LINK" decorated_url()
+}
+
+/**
+*This is the only function that doesn't crashes program for some reason
+*/
+void img() : {}
+{
+  	"IMAGE" 
+    "WITH"
+    "SOURCE"    
+    <quoted_text> { System.out.println("here");}
+}
+
+/**
+*When program enters here it terminated with no errors
+*As I tried to change the input a little bit by doing any of the following
+*and testing accordingly for sure:
+*	1.leaving no options for parser and letting it choose "TEXT" only
+*	2.removing the quoted_text part
+*	3.removing recursive part
+*, I either got same output or the following error:
+*	Bailing out of infinite loop caused by repeated empty string matches at line 1, column 13.
+*		NB: column number was sometimes 1
+*So, I figured that program sometimes terminated due to infinite loop without printing error
+*	Nothing proves that but it is my only logical explanation
+*I searched stack overflow to find similar issues and found this link:
+*	https://stackoverflow.com/questions/29531506/why-am-i-getting-syntax-checking-failed-everytime-i-parse-an-assignment-statemen
+*		But couldn't find anything useful
+*/
+
+void decorated_text() : {}
+{
+    "WITH" 
+    ("COLOR" | "FONT" | "TEXT")
+    <quoted_text>
+    [ "AND" decorated_text() ]
+}
+
+/**
+*Edited this part to ensure that user enters WITH LINK "WHATEVER.com" at the end
+*Problem here is same as that of decorated text
+*/
+void decorated_url() : {}
+{
+    [ decorated_text() ]
+    "WITH LINK"
+    <quoted_text>
+}
+
+
+/**
+*I faced another issue which is I can't really print anything out in the console.
+*Maybe something is wrong with my console or maybe I'm coding it wrong.
+*But I'm sure this will be an easy task as soon as we fix parsing issues.
+*/
