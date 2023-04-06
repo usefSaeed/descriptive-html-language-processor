@@ -1,0 +1,168 @@
+PARSER_BEGIN(Parser)
+package Test;
+
+import java.io.*;
+
+public class Parser {
+    static String stripOffQuotes(String quotedString) {
+        return quotedString.substring(1, quotedString.length() - 1);
+    }
+
+    public static void main(String[] args) throws Exception {
+	    Parser parser = new Parser(System.in);
+	    parser.start();
+    }
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+}
+
+TOKEN : { <EOL: "\n" | "\r"> }
+TOKEN :
+{
+    <QUOTE: "\""|"\'">
+|
+    <QUOTED_STRING : <QUOTE> ( (["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." | "_" | "-") (" ")* )* <QUOTE> >
+}
+
+
+void start() throws Exception : {}
+{
+    (
+        create()
+        <EOL>
+    )*
+    <EOF>
+}
+
+void create() :
+{
+    String e = "";
+}
+{
+    "ADD"
+    e = element()
+    {
+    	File file = new File("output.html");
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(file,true));
+            out.write(e);
+            out.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+	}
+}
+
+String element() : { String e = ""; }
+{
+    (  e= img()
+    |  e= para()
+    |  e= heading()
+    |  e= link() )
+
+    { return e; }
+}
+
+String para() :
+{
+StringBuilder style = new StringBuilder();
+StringBuilder text = new StringBuilder();
+}
+{
+    "PARAGRAPH"
+    decorated_text(style,text)
+    { if (!style.isEmpty()) {style.insert(0," style=\""); style.append("\"");} }
+    { return "<p" + style + ">"+ text + "</p>";}
+}
+
+String heading() :
+{
+ StringBuilder style = new StringBuilder();
+ StringBuilder text = new StringBuilder();
+}
+{
+    "HEADING"
+    decorated_text(style,text)
+    { if (!style.isEmpty()) {style.insert(0," style=\""); style.append("\"");} }
+    { return "<h1" + style + ">"+ text +"</h1>"; }
+}
+
+String link() :
+{
+StringBuilder style = new StringBuilder();
+StringBuilder text = new StringBuilder();
+StringBuilder href = new StringBuilder();
+}
+{
+    "LINK"
+    decorated_url(style,text, href)
+    {
+        if (!href.isEmpty())  href.insert(0, " href=");
+        if (!style.isEmpty()) {style.insert(0," style=\""); style.append("\"");}
+    }
+    { return "<a"+ href + style + ">" + text + "</a>"; }
+}
+
+//DONE
+String img() : { Token source; }
+{
+    "IMAGE"
+    "WITH"
+    "SOURCE"
+    source = <QUOTED_STRING>
+    { return "<img src=" + source + "></img>";}
+}
+
+void decorated_text(StringBuilder style, StringBuilder text) : { Token t;}
+{
+    "WITH"
+    (
+    "COLOR" t=<QUOTED_STRING> // "red"
+        {
+            style.append("color:" + stripOffQuotes(t.toString()) + ";");
+        }
+    | "FONT"  t=<QUOTED_STRING>
+        {
+            style.append("font-family:" + stripOffQuotes(t.toString()) + ";");
+        }
+    | "TEXT"  t=<QUOTED_STRING>
+        {
+            text.append(stripOffQuotes(t.toString()));
+        }
+    )
+    // [..] means that what is inside it is optional, in this context equivalent to (..)?
+    [ "AND" decorated_text(style,text) ]
+
+}
+
+void decorated_url(StringBuilder style, StringBuilder text, StringBuilder link) : { Token t = null; }
+{
+    "WITH"
+    (
+    "COLOR"  t=<QUOTED_STRING>
+        {
+            style.append("color:" + stripOffQuotes(t.toString()) + ";");
+        }
+    | "FONT" t=<QUOTED_STRING>
+        {
+            style.append("font-family:" + stripOffQuotes(t.toString()) + ";");
+        }
+    | "TEXT" t=<QUOTED_STRING>
+        {
+            text.append(stripOffQuotes(t.toString()));
+        }
+    | "LINK" t=<QUOTED_STRING>
+        {
+            link.append(t.toString());
+        }
+    )
+
+    [ "AND" decorated_url(style,text,link) ]
+}
+
