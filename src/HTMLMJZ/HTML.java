@@ -11,61 +11,20 @@ public class HTML implements HTMLConstants {
     parser.Input();
   }
 
-//TOKEN :
-//{
-//       <create: "ADD">
-//   |   <elem: img | head | para | url>
-//
-//   |   <img: "IMAGE" "WITH" "SOURCE" <phrase>>
-//   |   <head: "HEADING" <decorated_text>>
-//   |   <para: "PARAGRAPH" <decorated_text>>
-//   |   <url: "LINK" <decorated_url>>
-//
-//   |   <quote: "\""|"\'">
-//   |   <phrase:  <phrase> <alphanum> | "">
-//   |   <decorated_text: <decorated_text> "AND" <decorated_text> | <text> | <color> | <font>>
-//   |   <decorated_url: <decorated_url> "AND" <link> | <decorated_text> | <text> | <color> | <font> | <link>>
-//
-//   |   <alphanum: ["0"-"9" , "a"-"z", "A"-"Z"] | "/" | ":" | "." >
-//   |   <text: "WITH" "TEXT" <quote> <phrase> <quote>>
-//   |   <color: "WITH" "COLOR" <quote> <phrase> <quote>>
-//   |   <font: "WITH" "FONT" <quote> <phrase> <quote>>
-//       <link: "WITH" "LINK" < quote > <phrase > <quote >>
-//
-//}
-
 /** Root production. */
   static final public void Input() throws ParseException {
- String str= "";
-    jj_consume_token(8);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 9:
-    case 10:
-      str = element();
-      break;
-    default:
-      jj_la1[0] = jj_gen;
-      ;
+    label_1:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case create:
+        ;
+        break;
+      default:
+        jj_la1[0] = jj_gen;
+        break label_1;
+      }
+      jj_consume_token(create);
     }
-                             System.out.println(str);
-  }
-
-  static final public String element() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 9:
-      jj_consume_token(9);
-        {if (true) return "<img src=";}
-      break;
-    case 10:
-      jj_consume_token(10);
-        {if (true) return "<h1";}
-      break;
-    default:
-      jj_la1[1] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    throw new Error("Missing return statement in function");
   }
 
   static private boolean jj_initialized_once = false;
@@ -78,13 +37,13 @@ public class HTML implements HTMLConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[2];
+  static final private int[] jj_la1 = new int[1];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x600,0x600,};
+      jj_la1_0 = new int[] {0x4,};
    }
 
   /** Constructor with InputStream. */
@@ -105,7 +64,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -119,7 +78,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -136,7 +95,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -146,7 +105,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -162,7 +121,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -171,7 +130,7 @@ public class HTML implements HTMLConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 1; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -222,12 +181,12 @@ public class HTML implements HTMLConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[11];
+    boolean[] la1tokens = new boolean[14];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -236,7 +195,7 @@ public class HTML implements HTMLConstants {
         }
       }
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 14; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
